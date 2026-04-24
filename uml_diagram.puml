@@ -1,0 +1,102 @@
+@startuml PAssign08_UML
+
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+' ---- JavaFX Framework Classes ----
+package "javafx" <<Frame>> {
+    class Application {
+        +start(Stage): void
+        +launch(String[]): void
+    }
+
+    class GridPane {
+    }
+
+    class TextField {
+    }
+}
+
+' ---- keypad package ----
+package "keypad" {
+    class KeyPadPane {
+        #btn0: Button
+        #btn1: Button
+        #btn2: Button
+        #btn3: Button
+        #btn4: Button
+        #btn5: Button
+        #btn6: Button
+        #btn7: Button
+        #btn8: Button
+        #btn9: Button
+        #btnBlank1: Button
+        #btnBlank2: Button
+        #btnAsterisk: Button
+        #btnPound: Button
+        #listButtons: ArrayList<Button>
+        #copyListButtons: ArrayList<Button>
+        +KeyPadPane()
+        +KeyPadPane(boolean)
+        #registerEventHandlers(): void
+    }
+}
+
+' ---- Default package ----
+class PAssign08 {
+    -currentState: ATMState
+    -correctPin: String
+    -balance: double
+    -inputBuffer: String
+    -pinAttempts: int
+    -messageLabel: Label
+    -displayField: TextField
+    -btnWithdraw: Button
+    -btnDeposit: Button
+    -btnBalance: Button
+    -btnExit: Button
+    +start(Stage): void
+    +onKeyPressed(String): void
+    +main(String[]): void
+    -createMenuButton(String): Button
+    -createActionButton(String, String): Button
+    -setMenuButtonsDisabled(boolean): void
+    -setState(ATMState): void
+    -handleEnter(): void
+    -handleClear(): void
+    -handleCancel(): void
+    -handleMenuAction(String): void
+    -processWithdrawal(): void
+    -processDeposit(): void
+}
+
+enum ATMState <<inner>> {
+    IDLE
+    PIN
+    MENU
+    WITHDRAW
+    DEPOSIT
+}
+
+class KeyPadCustomPane {
+    -display: TextField
+    -atmApp: PAssign08
+    +KeyPadCustomPane()
+    +setDisplay(TextField): void
+    +setATMApp(PAssign08): void
+    -customizeStyle(): void
+    #registerEventHandlers(): void
+}
+
+' ---- Relationships ----
+KeyPadPane --|> GridPane : extends
+PAssign08 --|> Application : extends
+KeyPadCustomPane --|> KeyPadPane : extends
+
+PAssign08 +-- ATMState : <<inner enum>>
+
+PAssign08 "1" *-- "1" KeyPadCustomPane : creates >
+KeyPadCustomPane "1" --> "1" PAssign08 : atmApp >
+KeyPadCustomPane "1" --> "1" TextField : display >
+
+@enduml
